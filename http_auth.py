@@ -137,7 +137,6 @@ def jugar_solo():
             mover(tank.name, "down")
             mover(tank.name, "down")
 
-
     out = []
     for i in app.config['tanks']:
         out.append(i.print())

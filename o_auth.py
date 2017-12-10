@@ -1,13 +1,10 @@
-from flask import Flask, request, jsonify, render_template, request, redirect, url_for
+from flask import Flask, request, jsonify, render_template, request, redirect, url_for, session
 from random import randint
-from flask_httpauth import HTTPBasicAuth
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_dance.contrib.github import make_github_blueprint, github
 # Instalar el paquete:
 # flask_httpauth
 
 app = Flask(__name__)
-auth = HTTPBasicAuth()
 
 app.config['tanks'] = []
 app.config['number'] = 0
@@ -19,7 +16,6 @@ pixWidth = 28;
 
 #github_blueprint = make_github_blueprint(client_id='df32b1b8d9c4dd730a0c', client_secret='5f90f651009036ccc49a2b93a2e445e7f4b67ee9')
 github_blueprint = make_github_blueprint(client_id='d4056701894d81060774', client_secret='bb3955555590d78e26988a09aac4ab31fac26dd0')
-
 app.register_blueprint(github_blueprint, url_prefix='/github_login')
 
 @app.route('/github')
@@ -100,7 +96,10 @@ def atank():
 
 # Direccion principal donde se juega
 @app.route('/Battle-Tanks')
-def game():
+def game(oauth_token):
+    next_url = request.args.get('next') or url_for('index')
+    if oauth_token is None:
+        return redirect(next_url)
     return render_template('CanvasRec.html')
 
 
